@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DoctorChatBot</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div id="login-container">
+    <h1>Welcome to Diabatic Bot</h1>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <div id="chat-container">
+    <div id="header">
+      <h1>Diabatic Bot</h1>
+    </div>
+    <div id="chat-log"></div>
+    <div id="user-input-container">
+      <input type="text" id="user-input" placeholder="Type your message..." autofocus />
+      <button id="enter-button">Enter</button>
+    </div>
+    <div id="recommendation-container">
+      <h3>Recommended Messages:</h3>
+      <ul id="recommendation-list">
+        <li>Hello</li>
+        <li>How are you?</li>
+        <li>What are the visiting hours?</li>
+        <li>Can I book an appointment?</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="script1.js"></script>
+</body>
+</html>
