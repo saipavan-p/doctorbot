@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const chatLog = document.getElementById("chat-log");
   const userInput = document.getElementById("user-input");
   const recommendationList = document.getElementById("recommendation-list");
+  const enterButton = document.getElementById("enter-button");
 
   // Function to add a new message to the chat log
   function addMessage(message, sender) {
@@ -14,11 +15,13 @@ document.addEventListener("DOMContentLoaded", function() {
     messageContainer.classList.add("message");
     messageContainer.classList.add(sender);
 
-    const messageText = document.createElement("p");
-    messageText.textContent = message;
+    const messageCard = document.createElement("div");
+    messageCard.classList.add("message-card");
+    messageCard.textContent = message;
 
-    messageContainer.appendChild(messageText);
+    messageContainer.appendChild(messageCard);
     chatLog.appendChild(messageContainer);
+    chatLog.scrollTop = chatLog.scrollHeight;
   }
 
   // Function to handle user login
@@ -41,22 +44,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Function to handle user input
   async function handleUserInput() {
-    const message = userInput.value;
-  
-    if (message.trim() !== "") {
+    const message = userInput.value.trim();
+
+    if (message !== "") {
       addMessage(message, "user");
+
       try {
-        const response = await getResponse(message);
+        const response = await getBotResponse(message);
         addMessage(response, "bot");
       } catch (error) {
         console.error(error);
-        addMessage("Failed to get response from the bot.", "bot");
+        addMessage("Hello patient. I'm doctor John. Can you specify what is your problem.", "bot");
       }
-  
+
       userInput.value = "";
     }
   }
-  
 
   // Function to handle recommended message click
   function handleRecommendationClick(event) {
@@ -65,24 +68,23 @@ document.addEventListener("DOMContentLoaded", function() {
     userInput.focus();
   }
 
-  // Example function to generate a response
-  async function getResponse(message) {
-  const response = await fetch('python.exe -m pip install --upgrade pip', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ message }),
-  });
+  // Function to get response from the bot.py backend
+  async function getBotResponse(message) {
+    const response = await fetch('/bot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
 
-  if (response.ok) {
-    const data = await response.json();
-    return data.response;
-  } else {
-    throw new Error('Failed to get response from the bot.');
+    if (response.ok) {
+      const data = await response.json();
+      return data.response;
+    } else {
+      throw new Error("Hello patient. I'm doctor John. Can you specify what is your problem.");
+    }
   }
-}
-
 
   // Event listener for login form submission
   loginForm.addEventListener("submit", handleLogin);
@@ -97,4 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Event listener for recommended message click
   recommendationList.addEventListener("click", handleRecommendationClick);
+
+  // Event listener for Enter button click
+  enterButton.addEventListener("click", handleUserInput);
 });

@@ -75,6 +75,34 @@ body {
   border-radius: 10px;
 }
 
+/* Style for user messages */
+.message.user {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.message.user .message-card {
+  background-color: #DCF8C6;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 80%;
+}
+
+/* Style for bot messages */
+.message.bot {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.message.bot .message-card {
+  background-color: #DCF8C6;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 80%;
+}
+
 #user-input-container {
   display: flex;
   margin-top: 10px;
@@ -120,6 +148,11 @@ body {
 #recommendation-list li {
   margin-bottom: 5px;
   cursor: pointer;
+  background-color: #d2d2d2;
+  padding: 10px;
+  border: 1px solid #999999;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 #recommendation-list li:hover {

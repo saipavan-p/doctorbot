@@ -10,6 +10,4 @@ def read_root():
     with open('templates/project.html','r') as file:
         content = file.read()
     return HTMLResponse(content=content)
-
-        
-        
+    

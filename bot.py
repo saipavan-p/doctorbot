@@ -3,10 +3,10 @@ import openai
 import getpass 
 import re
 
-openai.api_key = getpass.getpass('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')
+openai.api_key = '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'
 
 class CreateBot:
-    def __init__(self, system_prompt):
+    def _init_(self, system_prompt):
         '''
         system_prompt: [str] Describes context for Chat Assistant
         '''
@@ -73,7 +73,7 @@ def extract_advantages(response):
 
     return advantages
 
-app = Flask(__name__)
+app = Flask(_name_)
 doctor = CreateBot(system_prompt="""You are Dr.John a doctor interacting with your diabetic patient,first you greet the patient and then ask for their problems,you respond in short and sweet manner """)
 
 @app.route('/bot', methods=['POST'])
@@ -98,5 +98,5 @@ def bot_response():
     # Return the response as JSON
     return jsonify({'response': content})
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     app.run(port=5000)
