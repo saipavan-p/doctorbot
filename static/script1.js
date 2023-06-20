@@ -1,105 +1,90 @@
-document.addEventListener("DOMContentLoaded", function() {
-  const loginContainer = document.getElementById("login-container");
-  const chatContainer = document.getElementById("chat-container");
-  const loginForm = document.getElementById("login-form");
-  const usernameInput = document.getElementById("username");
-  const passwordInput = document.getElementById("password");
-  const chatLog = document.getElementById("chat-log");
-  const userInput = document.getElementById("user-input");
-  const recommendationList = document.getElementById("recommendation-list");
-  const enterButton = document.getElementById("enter-button");
+// Function to handle user login
+function handleLogin(event) {
+  event.preventDefault();
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
 
-  // Function to add a new message to the chat log
-  function addMessage(message, sender) {
-    const messageContainer = document.createElement("div");
-    messageContainer.classList.add("message");
-    messageContainer.classList.add(sender);
+  // Perform login validation and redirect if successful
+  // ...
 
-    const messageCard = document.createElement("div");
-    messageCard.classList.add("message-card");
-    messageCard.textContent = message;
+  // Clear the input fields
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+}
 
-    messageContainer.appendChild(messageCard);
-    chatLog.appendChild(messageContainer);
-    chatLog.scrollTop = chatLog.scrollHeight;
-  }
+// Function to add a new message to the chat log
+function addMessage(role, content) {
+  var chatLog = document.getElementById("chat-log");
+  var message = document.createElement("div");
+  message.className = role;
+  message.innerText = content;
+  chatLog.appendChild(message);
+}
 
-  // Function to handle user login
-  function handleLogin(event) {
+// Function to handle recommended message click
+function handleRecommendationClick(event) {
+  var userInput = document.getElementById("user-input");
+  var recommendedMessage = event.target.innerText;
+  userInput.value = recommendedMessage;
+}
+
+// Event listener for login form submission
+var loginForm = document.getElementById("login-form");
+loginForm.addEventListener("submit", handleLogin);
+
+// Event listener for user input
+var userInput = document.getElementById("user-input");
+userInput.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
     event.preventDefault();
+    var message = userInput.value;
+    addMessage("user", message);
+    userInput.value = "";
 
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-
-    if (username === "admin" && password === "password") {
-      loginContainer.style.display = "none";
-      chatContainer.style.display = "block";
-    } else {
-      alert("Invalid username or password. Please try again.");
-    }
-
-    usernameInput.value = "";
-    passwordInput.value = "";
+    // Call the function to handle user input and get the response from the bot
+    handleUserInput(message);
   }
-
-  // Function to handle user input
-  async function handleUserInput() {
-    const message = userInput.value.trim();
-
-    if (message !== "") {
-      addMessage(message, "user");
-
-      try {
-        const response = await getBotResponse(message);
-        addMessage(response, "bot");
-      } catch (error) {
-        console.error(error);
-        addMessage("Hello patient. I'm doctor John. Can you specify what is your problem.", "bot");
-      }
-
-      userInput.value = "";
-    }
-  }
-
-  // Function to handle recommended message click
-  function handleRecommendationClick(event) {
-    const recommendedMessage = event.target.textContent;
-    userInput.value = recommendedMessage;
-    userInput.focus();
-  }
-
-  // Function to get response from the bot.py backend
-  async function getBotResponse(message) {
-    const response = await fetch('/bot', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ message }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return data.response;
-    } else {
-      throw new Error("Hello patient. I'm doctor John. Can you specify what is your problem.");
-    }
-  }
-
-  // Event listener for login form submission
-  loginForm.addEventListener("submit", handleLogin);
-
-  // Event listener for user input
-  userInput.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault(); // Prevent form submission
-      handleUserInput();
-    }
-  });
-
-  // Event listener for recommended message click
-  recommendationList.addEventListener("click", handleRecommendationClick);
-
-  // Event listener for Enter button click
-  enterButton.addEventListener("click", handleUserInput);
 });
+
+// Event listener for recommended message click
+var recommendationList = document.getElementById("recommendation-list");
+recommendationList.addEventListener("click", handleRecommendationClick);
+
+// Event listener for Enter button click
+var enterButton = document.getElementById("enter-button");
+enterButton.addEventListener("click", function(event) {
+  var message = userInput.value;
+  addMessage("user", message);
+  userInput.value = "";
+
+  // Call the function to handle user input and get the response from the bot
+  handleUserInput(message);
+});
+
+// Function to handle user input
+function handleUserInput(input) {
+  // Create a new XMLHttpRequest object
+  var xhr = new XMLHttpRequest();
+
+  // Set up the request
+  xhr.open("POST", "/chatbot", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  // Set up the callback function for when the request completes
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText).response;
+      addMessage("assistant", response);
+    } else {
+      console.log("Error:", xhr.status);
+    }
+  };
+
+  // Create the request body as JSON
+  var requestBody = JSON.stringify({ input: input });
+
+  // Send the request
+  xhr.send(requestBody);
+}
+
+
